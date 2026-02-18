@@ -1,0 +1,8 @@
+.repos-list-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    list-style: none;    
+
+}

@@ -5,6 +5,7 @@ import { FaGithub } from "react-icons/fa";
 import { useState, useEffect } from "react"
 import { Octokit } from "@octokit/rest"
 import { TailSpin } from 'react-loader-spinner'
+import Cookies from "js-cookie"
 
 const apiProgress = {
     start: "START",
@@ -19,7 +20,6 @@ const Home = () => {
     const [userData, setUserData] = useState(null)
     const [progress, setProgress] = useState(apiProgress.start)
     const [error, setError] = useState("");
-    const [isOnline, setIsOnline] = useState(navigator.onLine)
     const octokit = new Octokit()
 
     useEffect(() => {
@@ -44,6 +44,7 @@ const Home = () => {
         }
         setProgress(apiProgress.loading)
         try {
+            Cookies.set("username", username, { expires: 1})
             const response = await octokit.request('GET /users/{username}', {
                 username: username
             })

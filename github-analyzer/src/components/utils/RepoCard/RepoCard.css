@@ -1,0 +1,18 @@
+.repoCard-container{
+    background-color: #ffffff0f;
+    border-radius: 10px;
+    min-height: 200px;
+    width: 80vw;
+    padding: 10px 20px;
+}
+
+.repo-name a{
+    text-decoration: none;
+    color: #2374e6;
+    font-size: 20px;
+}
+
+.repo-description{
+    color: #fff;
+    margin-block: 10px;
+}
