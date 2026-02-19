@@ -6,7 +6,7 @@
     padding: 10px 20px;
 }
 
-.repo-name a {
+.repo-name{
     text-decoration: none;
     color: #2374e6;
     font-size: 20px;

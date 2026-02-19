@@ -16,7 +16,7 @@ const apiProgress = {
 }
 
 const Home = ({username, setUsername}) => {
-    // const [username, setUsername] = useState("")
+    const [userInput, setUserInput] = useState("")
     const [userData, setUserData] = useState(null)
     const [progress, setProgress] = useState(apiProgress.start)
     const [error, setError] = useState("");
@@ -24,9 +24,50 @@ const Home = ({username, setUsername}) => {
 
     const onSubmitUsername = async (e) => {
         e.preventDefault()
-        if (!username) {
+        if (!userInput) {
             return setError("Enter the valid github username")
         }
+        setUsername(userInput)
+        setProgress(apiProgress.loading)
+        try {
+            const response = await octokit.request('GET /users/{username}', {
+                username: userInput
+            })
+            if (response.status === 200) {
+                setProgress(apiProgress.success)
+                const data = response.data
+                console.log(data)
+                const formattedData = {
+                    avatarUrl: data.avatar_url,
+                    id: data.id,
+                    login: data.login,
+                    bio: data.bio,
+                    company: data.company,
+                    email: data.email,
+                    followers: data.followers,
+                    following: data.following,
+                    htmlUrl: data.html_url,
+                    location: data.location,
+                    name: data.name,
+                    publicRepos: data.public_repos,
+                    reposUrl: data.repos_url,
+                }
+                console.log(formattedData)
+                setUserData(formattedData)
+                setError("")
+                setUserInput("")
+            } else {
+                setProgress(apiProgress.failure)
+                setError("Enter the valid github username")
+                setUserInput("")
+            }
+        } catch (err) {
+            setProgress(apiProgress.failure)
+            console.log("User not found", err)
+        }
+    }
+
+    const onGetDataFromUsername = async () =>{
         setProgress(apiProgress.loading)
         try {
             const response = await octokit.request('GET /users/{username}', {
@@ -69,15 +110,17 @@ const Home = ({username, setUsername}) => {
         const handleOffline = () => setProgress(apiProgress.offline)
 
         window.addEventListener("offline", handleOffline)
-        onSubmitUsername()
+        if (username) {
+            onGetDataFromUsername()
+        }
         return () => {
             window.removeEventListener("offline", handleOffline)
         }
     }, [])
 
 
-    const onChangeUsername = e => {
-        setUsername(e.target.value)
+    const onChangeUserInput = e => {
+        setUserInput(e.target.value)
     }
 
     
@@ -169,7 +212,7 @@ const Home = ({username, setUsername}) => {
             <div className='dashboard'>
                 <div>
                     <form className={`form-input ${error ? "form-error" : ""}`} onSubmit={onSubmitUsername}>
-                        <input placeholder='Enter github username' onChange={onChangeUsername} value={username} />
+                        <input placeholder='Enter github username' onChange={onChangeUserInput} value={userInput} />
                         <button type="submit" className='submit-btn'><MdSearch /></button>
                     </form>
                     {error && <p className='error-msg'>{error}</p>}
