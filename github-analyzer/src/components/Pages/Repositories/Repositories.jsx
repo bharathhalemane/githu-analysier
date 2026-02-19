@@ -1,6 +1,5 @@
-//url:- https://api.github.com/users/bharathhalemane/repos
+//url:- https://api.github.com/users/${username}/repos
 import Header from '../../utils/Header/Header'
-import Cookies from "js-cookie"
 import { useState, useEffect } from "react"
 import { Octokit } from "@octokit/rest"
 import RepoCard from '../../utils/RepoCard/RepoCard'
@@ -14,11 +13,10 @@ const apiProgress = {
     loading: "LOADING"
 }
 
-const Repositories = ({username}) => {
-    const [reposData, setReposData] = useState([])    
-    // const username = Cookies.get("username")
-    const [progress, setProgress]= useState(apiProgress.loading)
-    const octokit = new Octokit()   
+const Repositories = ({ username }) => {
+    const [reposData, setReposData] = useState([])
+    const [progress, setProgress] = useState(apiProgress.loading)
+    const octokit = new Octokit()
 
     const formattedData = data => {
         return {
@@ -28,29 +26,25 @@ const Repositories = ({username}) => {
             htmlUrl: data.html_url,
             stargazersCount: data.stargazers_count,
             topics: data.topics,
-            watchersCount: data.watchers_count,  
+            watchersCount: data.watchers_count,
             description: data.description
         }
     }
 
     const getReposData = async () => {
-        try {            
+        try {
             setProgress(apiProgress.loading)
             const response = await octokit.request('GET /users/{username}/repos', {
                 username: username
-            })            
-            if (response.status === 200) {          
-                console.log(response.data)
+            })
+            if (response.status === 200) {
                 const data = response.data.map(each => formattedData(each))
                 setReposData(data)
                 setProgress(apiProgress.success)
-                console.log(data)
-            }else{
-                console.log("error")
+            } else {
                 setProgress(apiProgress.failure)
             }
         } catch (err) {
-            console.log(err)
             setProgress(apiProgress.failure)
         }
     }
@@ -60,50 +54,50 @@ const Repositories = ({username}) => {
             return setProgress(apiProgress.failure)
         }
         getReposData()
-    },[])
+    }, [])
 
     const loader = () => {
-            return <div className='loader'>
-                <TailSpin
-                    height="40"
-                    width="40"
-                    color="#3b82f6"
-                    ariaLabel="tail-spin-loading"
-                    visible={true}
-                />
-            </div>
+        return <div className='loader'>
+            <TailSpin
+                height="40"
+                width="40"
+                color="#3b82f6"
+                ariaLabel="tail-spin-loading"
+                visible={true}
+            />
+        </div>
     }
 
     const successView = () => {
-        return <div className='success-view'>            
+        return <div className='success-view'>
             {
                 reposData.length > 0 ? <>
                     <h1 className='heading'>Repositories</h1>
                     <ul className='repos-list-container'>
-                {
-                    reposData.map(repo => (
-                        <li key={repo.id}>
-                            <RepoCard data={repo}/>
-                        </li>
-                    ))
-                }
+                        {
+                            reposData.map(repo => (
+                                <li key={repo.id}>
+                                    <RepoCard data={repo} />
+                                </li>
+                            ))
+                        }
                     </ul></> : <div className='no-repos-data'>
-                        <img src="https://res.cloudinary.com/dfomcgwro/image/upload/v1771441453/Layer_3_ctljs4.png" alt="no data"/>
-                        <h1>No Repositories Found</h1>
-            </div>
+                    <img src="https://res.cloudinary.com/dfomcgwro/image/upload/v1771441453/Layer_3_ctljs4.png" alt="no data" />
+                    <h1>No Repositories Found</h1>
+                </div>
             }
         </div>
     }
 
     const failureView = () => {
         return <div className='failure-view'>
-            <img src='https://res.cloudinary.com/dfomcgwro/image/upload/v1771441459/Empty_Box_Illustration_1_dj86g2.png' alt="failure"/>
+            <img src='https://res.cloudinary.com/dfomcgwro/image/upload/v1771441459/Empty_Box_Illustration_1_dj86g2.png' alt="failure" />
             <h1>No Data Found</h1>
             <p>Github Username is empty, please provide a valid username for Repositories</p>
             <Link to="/"><button>Go to Home</button></Link>
         </div>
     }
-    
+
     const renderContent = () => {
         switch (progress) {
             case apiProgress.loading:

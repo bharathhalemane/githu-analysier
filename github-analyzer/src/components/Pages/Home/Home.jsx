@@ -5,7 +5,6 @@ import { FaGithub } from "react-icons/fa";
 import { useState, useEffect } from "react"
 import { Octokit } from "@octokit/rest"
 import { TailSpin } from 'react-loader-spinner'
-// import Cookies from "js-cookie"
 
 const apiProgress = {
     start: "START",
@@ -15,7 +14,7 @@ const apiProgress = {
     offline: "OFFLINE"
 }
 
-const Home = ({username, setUsername}) => {
+const Home = ({ username, setUsername }) => {
     const [userInput, setUserInput] = useState("")
     const [userData, setUserData] = useState(null)
     const [progress, setProgress] = useState(apiProgress.start)
@@ -36,7 +35,6 @@ const Home = ({username, setUsername}) => {
             if (response.status === 200) {
                 setProgress(apiProgress.success)
                 const data = response.data
-                console.log(data)
                 const formattedData = {
                     avatarUrl: data.avatar_url,
                     id: data.id,
@@ -52,7 +50,6 @@ const Home = ({username, setUsername}) => {
                     publicRepos: data.public_repos,
                     reposUrl: data.repos_url,
                 }
-                console.log(formattedData)
                 setUserData(formattedData)
                 setError("")
                 setUserInput("")
@@ -63,11 +60,10 @@ const Home = ({username, setUsername}) => {
             }
         } catch (err) {
             setProgress(apiProgress.failure)
-            console.log("User not found", err)
         }
     }
 
-    const onGetDataFromUsername = async () =>{
+    const onGetDataFromUsername = async () => {
         setProgress(apiProgress.loading)
         try {
             const response = await octokit.request('GET /users/{username}', {
@@ -76,7 +72,6 @@ const Home = ({username, setUsername}) => {
             if (response.status === 200) {
                 setProgress(apiProgress.success)
                 const data = response.data
-                console.log(data)
                 const formattedData = {
                     avatarUrl: data.avatar_url,
                     id: data.id,
@@ -92,7 +87,6 @@ const Home = ({username, setUsername}) => {
                     publicRepos: data.public_repos,
                     reposUrl: data.repos_url,
                 }
-                console.log(formattedData)
                 setUserData(formattedData)
                 setError("")
             } else {
@@ -101,7 +95,6 @@ const Home = ({username, setUsername}) => {
             }
         } catch (err) {
             setProgress(apiProgress.failure)
-            console.log("User not found", err)
         }
     }
 
@@ -123,7 +116,7 @@ const Home = ({username, setUsername}) => {
         setUserInput(e.target.value)
     }
 
-    
+
     const startCase = () => (
         <>        <h1>Github Profile Visualizer</h1>
             <img src="https://res.cloudinary.com/dfomcgwro/image/upload/v1771268068/Group_2_ctaq2g.png" alt='' /></>
@@ -181,7 +174,7 @@ const Home = ({username, setUsername}) => {
                 }
                 <li key="LOCATION" className='data-details'>
                     <h1 className='data-heading'>LOCATION</h1>
-                    <p className='data-value'><MdLocationOn /> {location? location : "not enter"}</p>
+                    <p className='data-value'><MdLocationOn /> {location ? location : "not enter"}</p>
                 </li>
                 <li key="PROFILE" className='data-details'>
                     <h1 className='data-heading'>GITHUB</h1>
