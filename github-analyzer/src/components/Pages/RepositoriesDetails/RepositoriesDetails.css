@@ -76,7 +76,10 @@
     gap: 2px;
     font-weight: bold;
 }
-
+.pieChart-list {
+  width: 100%;
+  height: 350px;
+}
 @media(max-width:480px){
     .repository-success-view{
         gap: 10px;

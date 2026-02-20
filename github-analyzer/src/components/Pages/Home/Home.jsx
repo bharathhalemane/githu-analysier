@@ -18,7 +18,7 @@ const token = import.meta.env.VITE_GITHUB_TOKEN
 
 const Home = ({ username, setUsername }) => {
     const [userInput, setUserInput] = useState("")
-    const [userData, setUserData] = useState(null)
+    const [userData, setUserData] = useState({})
     const [progress, setProgress] = useState(apiProgress.start)
     const [error, setError] = useState("");
     const octokit = new Octokit()

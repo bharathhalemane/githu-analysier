@@ -7,7 +7,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useState, useEffect } from "react"
 import Header from '../../utils/Header/Header'
 import { TailSpin } from "react-loader-spinner"
-
+import PieChartData from '../../utils/PieChartData/PieChartData'
 import { FaStar, FaEye, } from "react-icons/fa";
 import { PiGitBranchBold } from "react-icons/pi";
 
@@ -35,7 +35,7 @@ const RepositoriesDetails = ({ username }) => {
             issuesCount : data.open_issues_count,
             name: data.name,
             stargazersCount: data.stargazers_count,
-            topics: data.topics,
+            topics: data.topics || [],
             watchersCount: data.watchers_count,
         }
     }
@@ -73,7 +73,6 @@ const RepositoriesDetails = ({ username }) => {
     }
 
     const getContributors = async () => {
-
         try {
             const url = `https://api.github.com/repos/${username}/${repoName}/contributors`
             const option = {
@@ -158,7 +157,7 @@ const RepositoriesDetails = ({ username }) => {
             <p className='repo-detail-description'>{description}</p>
             <ul className='topics-list'>
                 {
-                    topics.map((topic, index) => (
+                    (topics || []).map((topic, index) => (
                         <li key={topic} className={`${colorClassNames[index % colorClassNames.length]} topics`}>{topic}</li>
                     ))
                 }
@@ -182,11 +181,11 @@ const RepositoriesDetails = ({ username }) => {
             <div className="count-container">
                 <div className='count'>
                     <h1>Commits Count</h1>
-                    <p>{commits}</p>
+                    <p>{commits || 0}</p>
                 </div>
                 <div className='count'>
                     <h1>Issues Count</h1>
-                    <p>{issuesCount}</p>
+                    <p>{issuesCount || 0}</p>
                 </div>
             </div>
 
@@ -197,7 +196,7 @@ const RepositoriesDetails = ({ username }) => {
                     contributors.length < 5 ?
                         <ul className="contributors-avatars">
                             {
-                                contributors.map(each => (
+                                (contributors || []).map(each => (
                                     <li key={each}>
                                         <img src={each.avatarUrl}  alt="avatar"/>
                                     </li>
@@ -206,7 +205,7 @@ const RepositoriesDetails = ({ username }) => {
                         </ul>
                         : <ul className="contributors-avatars">
                             {
-                                contributors.slice(0,5).map(each => (
+                                (contributors || []).slice(0,5).map(each => (
                                     <li key={each}>
                                         <img src={each.avatarUrl}  alt="avatar"/>
                                     </li>
@@ -217,6 +216,10 @@ const RepositoriesDetails = ({ username }) => {
                             </li>
                         </ul>
                 }
+            </div>
+
+            <div className="pieChart-list">
+                {/* <PieChartData owner={username} repo={repoName} /> */}
             </div>
         </div>
     }
