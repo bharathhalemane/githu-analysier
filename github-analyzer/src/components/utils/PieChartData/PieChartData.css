@@ -7,3 +7,8 @@
         display: none;
     }
 }
+
+.pie-chart-container{
+    display: flex;
+    
+}
